@@ -1,6 +1,7 @@
 name: ientity
 description: A starting point for Dart libraries or applications.
-version: 0.0.1
+version: 0.0.2
+homepage:
 publish_to: none
 
 environment:
@@ -13,7 +14,3 @@ dependencies:
   json_ex:
     git:
       url: https://github.com/TrueCollaboration/json_ex.dart.git
-
-dev_dependencies:
-  lints: ^2.0.0
-  test: ^1.16.0
