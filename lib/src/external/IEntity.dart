@@ -1,3 +1,5 @@
+import 'dart:convert' as dart;
+
 import 'package:flutter/foundation.dart';
 import 'package:json_ex/library.dart';
 
@@ -5,25 +7,58 @@ import 'ColumnInfo.dart';
 import 'ERequestType.dart';
 import 'RowInfo.dart';
 
-abstract class IEntityParams<ENUM> {
-  // @override
-  // operator ==(Object other) => throw(new Exception(
-  //   "IEntityParams must @override operator ==\n"
-  //   "return other is T && this.primaryKey != null && other.primaryKey != null && this.primaryKey == other.primaryKey",
-  // ));
+// abstract class IEntityParams<ENUM> {
+//   // @override
+//   // operator ==(Object other) => throw(new Exception(
+//   //   "IEntityParams must @override operator ==\n"
+//   //   "return other is T && this.primaryKey != null && other.primaryKey != null && this.primaryKey == other.primaryKey",
+//   // ));
 
-  // @override
-  // operator ==(Object other)
-  //   => other is IEntityParams<ENUM>
-  //     && this.primaryKey != 0 && other.primaryKey != 0
-  //     && this.primaryKey == other.primaryKey;
+//   // @override
+//   // operator ==(Object other)
+//   //   => other is IEntityParams<ENUM>
+//   //     && this.primaryKey != 0 && other.primaryKey != 0
+//   //     && this.primaryKey == other.primaryKey;
 
-  // @override
-  // int get hashCode => super.hashCode;
+//   // @override
+//   // int get hashCode => super.hashCode;
 
-  int get pid;
+//   int get pid;
   
-  set pid(int id);
+//   set pid(int id);
+// }
+
+class EntityOptions<ENUM> {
+  final IEntity<ENUM> entity;
+  EntityOptions(this.entity);
+
+
+
+  final List<ENUM>  _changedParams = [];
+
+  int _locks = 0;
+
+  
+
+  Iterable<ENUM> get changedParams => _changedParams;
+
+  // EEntityState get state => state;
+  EEntityState state = EEntityState.NONE;
+
+  bool get initialized => state == EEntityState.INITED;
+
+  bool get disposed => state == EEntityState.DISPOSED;
+
+  bool get locked => _locks > 0;
+
+  bool get loaded => state == EEntityState.LOADED;
+
+  bool get edited => state == EEntityState.EDITED;
+
+  bool get stored => state == EEntityState.STORED;
+
+  void lock() => _locks += 1;
+  void unlock() => _locks -= 1;
 }
 
 abstract class IEntity<ENUM> {
@@ -51,23 +86,53 @@ abstract class IEntity<ENUM> {
     return columns.where((e) => params.contains(e.param)).toList();
   }
 
-  
-  IEntity.create();
-  IEntity.fromTable(JsonObjectEx json) {
-    state = EEntityState.LOADED;
+  static String? jsonEncode(Object? value) {
+    if(value == null)
+      return null;
+    if(value is Map) {
+      if(value is! Map<String, dynamic>) {
+        value = value.map((key, value) => MapEntry(key.toString(), value));
+      }
+    } return dart.jsonEncode(value);
+  }
+
+  static Map<T, T2>? jsonDecode<T, T2>(String? value) {
+    if(value == null)
+      return null;
+    Map json = dart.jsonDecode(value) as Map<String, dynamic>;
+    if(T == int)
+      json = json.map((key, value) => MapEntry(int.parse(key), value));
+    else if(T == double)
+      json = json.map((key, value) => MapEntry(double.parse(key), value));
+    return json.cast<T, T2>();
   }
 
 
-  IEntityParams<ENUM> get params;
+  int get pid;
+  
+  set pid(int id);
+  
+  IEntity.empty() {
+    _options = EntityOptions(this);
+  }
+  
+  IEntity.fromTable(JsonObjectEx json) {
+    _options = EntityOptions(this);
+    getOptions().state = EEntityState.LOADED;
+  }
+
+
+  EntityOptions<ENUM> getOptions()
+    => _options;
 
   @mustCallSuper
   void initState() {
     // assert(() {
-      if(state == EEntityState.INITED)
+      if(getOptions().state == EEntityState.INITED)
         throw(new Exception("Entity have been already initialized"));
-      else if(state == EEntityState.DISPOSED)
+      else if(getOptions().state == EEntityState.DISPOSED)
         throw(new Exception("Entity have been already disposed"));
-      state += EEntityState.INITED;
+      getOptions().state += EEntityState.INITED;
       // return true;
     // }());
   }
@@ -75,13 +140,13 @@ abstract class IEntity<ENUM> {
   @mustCallSuper
   void dispose() {
     // assert(() {
-      if(state == EEntityState.DISPOSED)
+      if(getOptions().state == EEntityState.DISPOSED)
         throw(new Exception("Entity have been already disposed"));
-      if(state != EEntityState.INITED)
+      if(getOptions().state != EEntityState.INITED)
         throw(new Exception("Entity havent been initialized"));
-      if(_locks > 0)
+      if(getOptions().locked)
         throw(new Exception("Entity locked"));
-      state += EEntityState.DISPOSED;
+      getOptions().state += EEntityState.DISPOSED;
       // return true;
     // }());
   }
@@ -115,53 +180,34 @@ abstract class IEntity<ENUM> {
     List<ENUM> exclude = const [],
   });
 
+  void lock() => getOptions().lock();
+  void unlock() => getOptions().unlock();
 
-
-  Iterable<ENUM> get changedParams => _changedParams;
-
-  // EEntityState get state => state;
-  EEntityState state = EEntityState.NONE;
-
-  bool get initialized => state == EEntityState.INITED;
-
-  bool get disposed => state == EEntityState.DISPOSED;
-
-  bool get locked => _locks > 0;
-
-  bool get loaded => state == EEntityState.LOADED;
-
-  bool get edited => state == EEntityState.EDITED;
-
-  bool get stored => state == EEntityState.STORED;
-
-  void lock() => _locks += 1;
-  void unlock() => _locks -= 1;
-
-  void setLoaded(bool loaded) {
-    if(loaded) state += EEntityState.LOADED;
-    else state -= EEntityState.LOADED;
+  void setLoaded(
+    bool loaded,
+  ) {
+    if(loaded) getOptions().state += EEntityState.LOADED;
+    else getOptions().state -= EEntityState.LOADED;
   }
   
-  void setEdited(bool edited, {
-    List<ENUM> changed = const [],
+  void setEdited(
+    bool edited, {
+      List<ENUM> changed = const [],
   }) {
     if(!edited) {
-      _changedParams.clear();
-      state -= EEntityState.EDITED;
+      getOptions()._changedParams.clear();
+      getOptions().state -= EEntityState.EDITED;
       return;
     } if(changed.isEmpty)
       throw(new Exception("setEdited(true) should provide changes list; changed is empty"));
-    state += EEntityState.EDITED;
+    getOptions().state += EEntityState.EDITED;
     for(final param in changed)
-      if(!_changedParams.contains(param))
-        _changedParams.add(param);
+      if(!getOptions()._changedParams.contains(param))
+        getOptions()._changedParams.add(param);
   }
 
 
-
-  int _locks = 0;
-
-  final List<ENUM>  _changedParams = [];
+  late final EntityOptions<ENUM> _options;
 }
 
 class EEntityState {
