@@ -112,7 +112,7 @@ abstract class IEntity<ENUM> {
   
   set pid(int id);
   
-  IEntity.empty() {
+  IEntity.create() {
     _options = EntityOptions(this);
   }
   
