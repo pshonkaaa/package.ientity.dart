@@ -108,9 +108,9 @@ abstract class IEntity<ENUM> {
   }
 
 
-  int get pid;
+  int get id;
   
-  set pid(int id);
+  set id(int id);
   
   IEntity.create() {
     _options = EntityOptions(this);
