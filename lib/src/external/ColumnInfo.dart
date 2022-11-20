@@ -1,19 +1,20 @@
 import 'ColumnType.dart';
 
-class ColumnInfo<PARAM> {
-  /// Must be an Enum to be passed in IEntity<PARAM>
-  final PARAM param;
+class ColumnInfo {
   final String name;
   final ColumnType type;
-  final bool primaryKey;
-  const ColumnInfo(
-    this.param,
-    this.name,
-    this.type, {
-      this.primaryKey = false,
+  final String? defaultValue;
+  final bool isPrimaryKey;
+  final bool isAutoIncrement;
+  final bool isNullable;
+  final Map<String, dynamic>? extra;
+  const ColumnInfo({
+    required this.name,
+    required this.type,
+    required this.defaultValue,
+    required this.isPrimaryKey,
+    required this.isAutoIncrement,
+    required this.isNullable,
+    this.extra,
   });
-
-
-  @override
-  String toString() => name;
 }

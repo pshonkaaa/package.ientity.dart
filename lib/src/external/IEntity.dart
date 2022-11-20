@@ -3,7 +3,7 @@ import 'dart:convert' as dart;
 import 'package:flutter/foundation.dart';
 import 'package:json_ex/library.dart';
 
-import 'ColumnInfo.dart';
+import 'EntityColumnInfo.dart';
 import 'ERequestType.dart';
 import 'RowInfo.dart';
 
@@ -77,8 +77,8 @@ abstract class IEntity<ENUM> {
     return out;
   }
 
-  static List<ColumnInfo<T>> makeColumnsFromParamsList<T>(
-    Iterable<ColumnInfo<T>> columns,
+  static List<EntityColumnInfo<T>> makeColumnsFromParamsList<T>(
+    Iterable<EntityColumnInfo<T>> columns,
     Iterable<T> include,
     Iterable<T> exclude,
   ) {

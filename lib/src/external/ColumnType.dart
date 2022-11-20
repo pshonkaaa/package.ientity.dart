@@ -1,10 +1,3 @@
-// enum ColumnType {
-//   integer,
-//   real,
-//   text,
-//   blob,
-// }
-
 class ColumnType {
   /// Database name
   final String database;
