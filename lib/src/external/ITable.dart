@@ -2,18 +2,18 @@ import 'package:meta/meta.dart';
 
 import 'EntityColumnInfo.dart';
 
-abstract class ITable<PARAM> {
+abstract class ITable {
   final String name;
-  final List<EntityColumnInfo<PARAM>> _columns;
-  late final EntityColumnInfo<PARAM> _primaryKey;
+  final List<EntityColumnInfo> _columns;
+  late final EntityColumnInfo _primaryKey;
 
-  Iterable<EntityColumnInfo<PARAM>> get columns => _columns;
+  Iterable<EntityColumnInfo> get columns => _columns;
 
-  EntityColumnInfo<PARAM> get primaryKey => _primaryKey;
+  EntityColumnInfo get primaryKey => _primaryKey;
 
   ITable({
     required this.name,
-    required List<EntityColumnInfo<PARAM>> columns,
+    required List<EntityColumnInfo> columns,
   }) : _columns = columns {
     _primaryKey = columns.firstWhere((e) => e.isPrimaryKey);
   }

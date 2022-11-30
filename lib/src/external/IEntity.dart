@@ -174,7 +174,7 @@ abstract class IEntity {
       List<EntityColumnInfo>? changedParams,
   });
   
-  RowInfo<EntityColumnInfo> toTable({
+  RowInfo toTable({
     required ERequestType requestType,
     List<EntityColumnInfo> include = const [],
     List<EntityColumnInfo> exclude = const [],

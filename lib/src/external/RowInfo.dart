@@ -2,8 +2,8 @@ import 'package:json_ex/library.dart';
 
 import 'EntityColumnInfo.dart';
 
-class RowInfo<T> {
-  final Map<EntityColumnInfo<T>, Object?> args;
+class RowInfo {
+  final Map<EntityColumnInfo, Object?> args;
   const RowInfo(
     this.args,
   );
@@ -12,7 +12,7 @@ class RowInfo<T> {
     return args.map((key, value) => new MapEntry(key.name, value));
   }
 
-  List<Object?> toList(Iterable<EntityColumnInfo<T>> columns) {
+  List<Object?> toList(Iterable<EntityColumnInfo> columns) {
     return columns.map((e) => args[e]).toList();
   }
 }
