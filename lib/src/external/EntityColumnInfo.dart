@@ -1,11 +1,8 @@
 import 'ColumnInfo.dart';
 import 'ColumnType.dart';
 
-class EntityColumnInfo<PARAM> extends ColumnInfo{
-  /// Must be an Enum to be passed in IEntity<PARAM>
-  final PARAM param;
+class EntityColumnInfo<T> extends ColumnInfo {
   const EntityColumnInfo(
-    this.param,
     String name,
     ColumnType type, {
       super.defaultValue,
@@ -17,7 +14,6 @@ class EntityColumnInfo<PARAM> extends ColumnInfo{
     name: name,
     type: type,
   );
-
 
   @override
   String toString() => name;

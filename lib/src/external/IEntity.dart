@@ -1,13 +1,13 @@
 import 'dart:convert' as dart;
 
-import 'package:flutter/foundation.dart';
 import 'package:json_ex/library.dart';
+import 'package:meta/meta.dart';
 
 import 'EntityColumnInfo.dart';
 import 'ERequestType.dart';
 import 'RowInfo.dart';
 
-// abstract class IEntityParams<ENUM> {
+// abstract class IEntityParams<EntityColumnInfo> {
 //   // @override
 //   // operator ==(Object other) => throw(new Exception(
 //   //   "IEntityParams must @override operator ==\n"
@@ -16,7 +16,7 @@ import 'RowInfo.dart';
 
 //   // @override
 //   // operator ==(Object other)
-//   //   => other is IEntityParams<ENUM>
+//   //   => other is IEntityParams<EntityColumnInfo>
 //   //     && this.primaryKey != 0 && other.primaryKey != 0
 //   //     && this.primaryKey == other.primaryKey;
 
@@ -28,19 +28,19 @@ import 'RowInfo.dart';
 //   set pid(int id);
 // }
 
-class EntityOptions<ENUM> {
-  final IEntity<ENUM> entity;
+class EntityOptions {
+  final IEntity entity;
   EntityOptions(this.entity);
 
 
 
-  final List<ENUM>  _changedParams = [];
+  final List<EntityColumnInfo>  _changedParams = [];
 
   int _locks = 0;
 
   
 
-  Iterable<ENUM> get changedParams => _changedParams;
+  Iterable<EntityColumnInfo> get changedParams => _changedParams;
 
   // EEntityState get state => state;
   EEntityState state = EEntityState.NONE;
@@ -61,7 +61,7 @@ class EntityOptions<ENUM> {
   void unlock() => _locks -= 1;
 }
 
-abstract class IEntity<ENUM> {
+abstract class IEntity {
   static List<T> makeParamsList<T>(
     Iterable<T> allParams,
     Iterable<T> include,
@@ -77,14 +77,14 @@ abstract class IEntity<ENUM> {
     return out;
   }
 
-  static List<EntityColumnInfo<T>> makeColumnsFromParamsList<T>(
-    Iterable<EntityColumnInfo<T>> columns,
-    Iterable<T> include,
-    Iterable<T> exclude,
-  ) {
-    final params = makeParamsList(columns.map((e) => e.param), include, exclude);
-    return columns.where((e) => params.contains(e.param)).toList();
-  }
+  // static List<EntityColumnInfo> makeColumnsFromParamsList<T>(
+  //   Iterable<EntityColumnInfo> columns,
+  //   Iterable<EntityColumnInfo> include,
+  //   Iterable<EntityColumnInfo> exclude,
+  // ) {
+  //   final params = makeParamsList(columns.map((e) => e.param), include, exclude);
+  //   return columns.where((e) => params.contains(e.param)).toList();
+  // }
 
   static String? jsonEncode(Object? value) {
     if(value == null)
@@ -122,7 +122,7 @@ abstract class IEntity<ENUM> {
   }
 
 
-  EntityOptions<ENUM> getOptions()
+  EntityOptions getOptions()
     => _options;
 
   @mustCallSuper
@@ -153,31 +153,31 @@ abstract class IEntity<ENUM> {
 
   /// Returns false if values have changed
   bool isIdentical(
-    IEntity<ENUM> entity, {
-      List<ENUM> include = const [],
-      List<ENUM> exclude = const [],
-      List<ENUM>? changedParams,
+    IEntity entity, {
+      List<EntityColumnInfo> include = const [],
+      List<EntityColumnInfo> exclude = const [],
+      List<EntityColumnInfo>? changedParams,
   });
 
   void copyTo(
-    IEntity<ENUM> entity, {
-      List<ENUM> include = const [],
-      List<ENUM> exclude = const [],
-      List<ENUM>? changedParams,
+    IEntity entity, {
+      List<EntityColumnInfo> include = const [],
+      List<EntityColumnInfo> exclude = const [],
+      List<EntityColumnInfo>? changedParams,
   });
 
   /// Returns true if values have changed
   bool copyChangesTo(
-    IEntity<ENUM> entity, {
-      List<ENUM> include = const [],
-      List<ENUM> exclude = const [],
-      List<ENUM>? changedParams,
+    IEntity entity, {
+      List<EntityColumnInfo> include = const [],
+      List<EntityColumnInfo> exclude = const [],
+      List<EntityColumnInfo>? changedParams,
   });
   
-  RowInfo<ENUM> toTable({
+  RowInfo<EntityColumnInfo> toTable({
     required ERequestType requestType,
-    List<ENUM> include = const [],
-    List<ENUM> exclude = const [],
+    List<EntityColumnInfo> include = const [],
+    List<EntityColumnInfo> exclude = const [],
   });
 
   void lock() => getOptions().lock();
@@ -192,7 +192,7 @@ abstract class IEntity<ENUM> {
   
   void setEdited(
     bool edited, {
-      List<ENUM> changed = const [],
+      List<EntityColumnInfo> changed = const [],
   }) {
     if(!edited) {
       getOptions()._changedParams.clear();
@@ -207,7 +207,7 @@ abstract class IEntity<ENUM> {
   }
 
 
-  late final EntityOptions<ENUM> _options;
+  late final EntityOptions _options;
 }
 
 class EEntityState {
@@ -235,5 +235,4 @@ class EEntityState {
 
   @override
   int get hashCode => value.hashCode;
-
 }

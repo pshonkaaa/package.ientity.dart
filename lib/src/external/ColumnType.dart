@@ -1,4 +1,11 @@
 class ColumnType {
+  static const NONE = ColumnType(
+    database: "none",
+    name: "none",
+    sinceVersion: "none",
+    deprecatedVersion: "none",
+  );
+
   /// Database name
   final String database;
   

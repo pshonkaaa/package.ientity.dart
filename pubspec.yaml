@@ -1,16 +1,15 @@
 name: ientity
 description: A starting point for Dart libraries or applications.
-version: 0.0.6
+version: 0.0.7
 homepage:
 publish_to: none
 
 environment:
   sdk: '>=2.17.6 <3.0.0'
 
-dependencies:
-  flutter:
-    sdk: flutter
-    
+dependencies:    
+  meta: any
+  
   json_ex:
     git:
       url: https://github.com/TrueCollaboration/json_ex.dart.git
