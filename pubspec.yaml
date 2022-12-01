@@ -6,10 +6,14 @@ publish_to: none
 
 environment:
   sdk: '>=2.17.6 <3.0.0'
-
-dependencies:    
-  meta: any
   
+dependencies:
+  meta: any
+    
+  json_annotation_ex:
+    git:
+      url: https://github.com/TrueCollaboration/json_annotation_ex.dart.git
   json_ex:
     git:
       url: https://github.com/TrueCollaboration/json_ex.dart.git
+    

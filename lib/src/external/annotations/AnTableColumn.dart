@@ -1,0 +1,3 @@
+class AnTableColumn {
+  const AnTableColumn();
+}
