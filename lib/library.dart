@@ -1,5 +1,6 @@
 library truecollaboration.true_core.ientity;
 
+export 'src/external/ChangedColumn.dart';
 export 'src/external/ColumnInfo.dart';
 export 'src/external/ColumnType.dart';
 export 'src/external/EntityColumnInfo.dart';

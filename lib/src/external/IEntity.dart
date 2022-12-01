@@ -3,6 +3,7 @@ import 'dart:convert' as dart;
 import 'package:json_ex/library.dart';
 import 'package:meta/meta.dart';
 
+import 'ChangedColumn.dart';
 import 'EntityColumnInfo.dart';
 import 'ERequestType.dart';
 import 'RowInfo.dart';
@@ -62,12 +63,12 @@ class EntityOptions {
 }
 
 abstract class IEntity {
-  static List<T> makeParamsList<T>(
-    Iterable<T> allParams,
-    Iterable<T> include,
-    Iterable<T> exclude,
+  static List<EntityColumnInfo> makeParamsList<EntityColumnInfo>(
+    Iterable<EntityColumnInfo> allParams,
+    Iterable<EntityColumnInfo> include,
+    Iterable<EntityColumnInfo> exclude,
   ) {
-    final out = <T>[];
+    final out = <EntityColumnInfo>[];
     if(include.isEmpty)
       out.addAll(allParams);
     else out.addAll(include);
@@ -156,14 +157,14 @@ abstract class IEntity {
     IEntity entity, {
       List<EntityColumnInfo> include = const [],
       List<EntityColumnInfo> exclude = const [],
-      List<EntityColumnInfo>? changedParams,
+      List<ChangedColumn>? differences,
   });
 
   void copyTo(
     IEntity entity, {
       List<EntityColumnInfo> include = const [],
       List<EntityColumnInfo> exclude = const [],
-      List<EntityColumnInfo>? changedParams,
+      List<ChangedColumn>? differences,
   });
 
   /// Returns true if values have changed
@@ -171,7 +172,7 @@ abstract class IEntity {
     IEntity entity, {
       List<EntityColumnInfo> include = const [],
       List<EntityColumnInfo> exclude = const [],
-      List<EntityColumnInfo>? changedParams,
+      List<ChangedColumn>? differences,
   });
   
   RowInfo toTable({
@@ -192,7 +193,7 @@ abstract class IEntity {
   
   void setEdited(
     bool edited, {
-      List<EntityColumnInfo> changed = const [],
+      Iterable<EntityColumnInfo> changed = const [],
   }) {
     if(!edited) {
       getOptions()._changedParams.clear();
