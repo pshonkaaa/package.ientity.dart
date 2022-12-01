@@ -1,4 +1,4 @@
-import 'package:ientity/src/external/EntityColumnInfo.dart';
+import 'EntityColumnInfo.dart';
 
 class ChangedColumn<T> {
   final EntityColumnInfo<T> column;
