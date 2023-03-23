@@ -1,6 +1,7 @@
 import 'ColumnType.dart';
+import 'IToSqlConvertable.dart';
 
-class ColumnInfo {
+class ColumnInfo implements IToSqlConvertable {
   final String name;
   final ColumnType type;
   final String? defaultValue;
@@ -17,4 +18,19 @@ class ColumnInfo {
     required this.isNullable,
     this.extra,
   });
+  
+  @override
+  String toSql() {
+    final sb = StringBuffer();
+    sb.write("$name ${type.name}");
+    if(!isNullable)
+      sb.write(" NOT NULL");
+    if(defaultValue != null)
+      sb.write(" DEFAULT '$defaultValue'");
+    if(isPrimaryKey)
+      sb.write(" PRIMARY KEY");
+    if(isAutoIncrement)
+      sb.write(" AUTO_INCREMENT");
+    return sb.toString();
+  }
 }

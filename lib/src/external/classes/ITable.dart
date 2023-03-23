@@ -1,8 +1,9 @@
 import 'package:meta/meta.dart';
 
 import 'EntityColumnInfo.dart';
+import 'IToSqlConvertable.dart';
 
-abstract class ITable {
+abstract class ITable implements IToSqlConvertable {
   final String name;
   final List<EntityColumnInfo> _columns;
   late final EntityColumnInfo _primaryKey;
@@ -24,5 +25,17 @@ abstract class ITable {
 
   @mustCallSuper
   Future<void> dispose() async {
+  }
+
+  @override
+  String toSql() {
+    final sb = StringBuffer();
+    sb.write("CREATE TABLE $name");
+
+    {      
+      sb.write(" (");
+      sb.write(_columns.map((e) => e.toSql()).join(","));
+      sb.write(")");
+    } return sb.toString();
   }
 }

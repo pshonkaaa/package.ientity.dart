@@ -10,4 +10,5 @@ export 'src/external/classes/EntityColumnInfo.dart';
 export 'src/external/classes/ERequestType.dart';
 export 'src/external/classes/IEntity.dart';
 export 'src/external/classes/ITable.dart';
+export 'src/external/classes/IToSqlConvertable.dart';
 export 'src/external/classes/RowInfo.dart';
