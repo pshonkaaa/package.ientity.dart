@@ -10,7 +10,7 @@ class EntityColumnInfo<T> extends ColumnInfo {
       super.defaultValue,
       super.isPrimaryKey = false,
       super.isAutoIncrement = false,
-      super.isNullable = null is T,
+      super.isNullable = false,
       super.extra,
   }) : super(
     name: name,
