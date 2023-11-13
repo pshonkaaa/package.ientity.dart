@@ -1,5 +1,3 @@
-import 'package:json_ex/library.dart';
-
 import 'EntityColumnInfo.dart';
 
 class RowInfo {
@@ -8,7 +6,7 @@ class RowInfo {
     this.args,
   );
 
-  JsonObject toMap() {
+  Map<String, dynamic> toMap() {
     return args.map((key, value) => new MapEntry(key.name, value));
   }
 
