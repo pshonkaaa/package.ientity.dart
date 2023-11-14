@@ -17,7 +17,4 @@ class EntityColumnInfo<T> extends ColumnInfo {
   );
   
   final T Function(T value)? transformer;
-
-  @override
-  String toString() => name;
 }

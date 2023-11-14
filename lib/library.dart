@@ -4,6 +4,7 @@ export 'src/external/annotations/table.dart';
 export 'src/external/annotations/table_column.dart';
 
 export 'src/external/classes/abstract/base_entity.dart';
+export 'src/external/classes/abstract/base_table.dart';
 
 export 'src/external/classes/interfaces/entity.dart';
 export 'src/external/classes/interfaces/table.dart';
