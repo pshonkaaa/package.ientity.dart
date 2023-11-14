@@ -1,7 +1,9 @@
+import 'package:true_core/library.dart';
+
 import '../entity_column_info.dart';
 import '../interfaces/table.dart';
 
-abstract class BaseTable implements ITable {
+abstract class BaseTable extends BaseAsyncStateable implements ITable {
   BaseTable({
     required this.name,
     required List<EntityColumnInfo> columns,
