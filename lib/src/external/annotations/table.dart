@@ -1,6 +1,6 @@
 import 'package:json_annotation_ex/library.dart';
 
-class AnTable {
+class TableAnnotation {
   // /// Ignore fields havent annotation `@AnTableColumn`
   // final bool ignoreFields;
 
@@ -13,7 +13,7 @@ class AnTable {
   final String removePrefix;
 
   final FieldRename fieldRename;
-  const AnTable({
+  const TableAnnotation({
     required this.entityName,
     this.model,
     this.mixins = const [],

@@ -1,68 +1,14 @@
 import 'dart:convert' as dart;
 
-import 'package:json_ex/library.dart';
 import 'package:meta/meta.dart';
 
-import 'ChangedColumn.dart';
-import 'EntityColumnInfo.dart';
-import 'ERequestType.dart';
-import 'RowInfo.dart';
+import '../ChangedColumn.dart';
+import '../ERequestType.dart';
+import '../EntityColumnInfo.dart';
+import '../RowInfo.dart';
+import '../interfaces/entity.dart';
 
-// abstract class IEntityParams<EntityColumnInfo> {
-//   // @override
-//   // operator ==(Object other) => throw(new Exception(
-//   //   "IEntityParams must @override operator ==\n"
-//   //   "return other is T && this.primaryKey != null && other.primaryKey != null && this.primaryKey == other.primaryKey",
-//   // ));
-
-//   // @override
-//   // operator ==(Object other)
-//   //   => other is IEntityParams<EntityColumnInfo>
-//   //     && this.primaryKey != 0 && other.primaryKey != 0
-//   //     && this.primaryKey == other.primaryKey;
-
-//   // @override
-//   // int get hashCode => super.hashCode;
-
-//   int get pid;
-  
-//   set pid(int id);
-// }
-
-class EntityOptions {
-  final IEntity entity;
-  EntityOptions(this.entity);
-
-
-
-  final List<EntityColumnInfo>  _changedParams = [];
-
-  int _locks = 0;
-
-  
-
-  Iterable<EntityColumnInfo> get changedParams => _changedParams;
-
-  // EEntityState get state => state;
-  EEntityState state = EEntityState.NONE;
-
-  bool get initialized => state == EEntityState.INITED;
-
-  bool get disposed => state == EEntityState.DISPOSED;
-
-  bool get locked => _locks > 0;
-
-  bool get loaded => state == EEntityState.LOADED;
-
-  bool get edited => state == EEntityState.EDITED;
-
-  bool get stored => state == EEntityState.STORED;
-
-  void lock() => _locks += 1;
-  void unlock() => _locks -= 1;
-}
-
-abstract class IEntity {
+abstract class BaseEntity implements IEntity {
   static List<EntityColumnInfo> makeParamsList<EntityColumnInfo>(
     Iterable<EntityColumnInfo> allParams,
     Iterable<EntityColumnInfo> include,
@@ -107,20 +53,17 @@ abstract class IEntity {
       json = json.map((key, value) => MapEntry(double.parse(key), value));
     return json.cast<T, T2>();
   }
-
-
-  int get id;
   
-  set id(int id);
-  
-  IEntity.create() {
+  BaseEntity.create() {
     _options = EntityOptions(this);
   }
   
-  IEntity.fromTable(JsonObjectEx json) {
+  BaseEntity.fromTable(Map<String, dynamic> json) {
     _options = EntityOptions(this);
     getOptions().state = EEntityState.LOADED;
   }
+  
+  set id(int id);
 
 
   EntityOptions getOptions()
@@ -130,9 +73,9 @@ abstract class IEntity {
   void initState() {
     // assert(() {
       if(getOptions().state == EEntityState.INITED)
-        throw(new Exception("Entity have been already initialized"));
+        throw(Exception("Entity have been already initialized"));
       else if(getOptions().state == EEntityState.DISPOSED)
-        throw(new Exception("Entity have been already disposed"));
+        throw(Exception("Entity have been already disposed"));
       getOptions().state += EEntityState.INITED;
       // return true;
     // }());
@@ -142,26 +85,18 @@ abstract class IEntity {
   void dispose() {
     // assert(() {
       if(getOptions().state == EEntityState.DISPOSED)
-        throw(new Exception("Entity have been already disposed"));
+        throw(Exception("Entity have been already disposed"));
       if(getOptions().state != EEntityState.INITED)
-        throw(new Exception("Entity havent been initialized"));
+        throw(Exception("Entity havent been initialized"));
       if(getOptions().locked)
-        throw(new Exception("Entity locked"));
+        throw(Exception("Entity locked"));
       getOptions().state += EEntityState.DISPOSED;
       // return true;
     // }());
   }
 
-  /// Returns false if values have changed
-  bool isIdentical(
-    IEntity entity, {
-      List<EntityColumnInfo> include = const [],
-      List<EntityColumnInfo> exclude = const [],
-      List<ChangedColumn>? differences,
-  });
-
   void copyTo(
-    IEntity entity, {
+    BaseEntity entity, {
       List<EntityColumnInfo> include = const [],
       List<EntityColumnInfo> exclude = const [],
       List<ChangedColumn>? differences,
@@ -169,20 +104,18 @@ abstract class IEntity {
 
   /// Returns true if values have changed
   bool copyChangesTo(
-    IEntity entity, {
+    BaseEntity entity, {
       List<EntityColumnInfo> include = const [],
       List<EntityColumnInfo> exclude = const [],
       List<ChangedColumn>? differences,
   });
-  
-  RowInfo toTable({
-    required ERequestType requestType,
-    List<EntityColumnInfo> include = const [],
-    List<EntityColumnInfo> exclude = const [],
-  });
 
-  void lock() => getOptions().lock();
-  void unlock() => getOptions().unlock();
+
+  void lock()
+    => getOptions().lock();
+    
+  void unlock()
+    => getOptions().unlock();
 
   void setLoaded(
     bool loaded,
@@ -199,9 +132,13 @@ abstract class IEntity {
       getOptions()._changedParams.clear();
       getOptions().state -= EEntityState.EDITED;
       return;
-    } if(changed.isEmpty)
-      throw(new Exception("setEdited(true) should provide changes list; changed is empty"));
+    }
+    
+    if(changed.isEmpty)
+      throw(Exception("setEdited(true) should provide changes list; changed is empty"));
+
     getOptions().state += EEntityState.EDITED;
+    
     for(final param in changed)
       if(!getOptions()._changedParams.contains(param))
         getOptions()._changedParams.add(param);
@@ -209,6 +146,39 @@ abstract class IEntity {
 
 
   late final EntityOptions _options;
+}
+
+class EntityOptions {
+  final BaseEntity entity;
+  EntityOptions(this.entity);
+
+
+
+  final List<EntityColumnInfo>  _changedParams = [];
+
+  int _locks = 0;
+
+  
+
+  Iterable<EntityColumnInfo> get changedParams => _changedParams;
+
+  // EEntityState get state => state;
+  EEntityState state = EEntityState.NONE;
+
+  bool get initialized => state == EEntityState.INITED;
+
+  bool get disposed => state == EEntityState.DISPOSED;
+
+  bool get locked => _locks > 0;
+
+  bool get loaded => state == EEntityState.LOADED;
+
+  bool get edited => state == EEntityState.EDITED;
+
+  bool get stored => state == EEntityState.STORED;
+
+  void lock() => _locks += 1;
+  void unlock() => _locks -= 1;
 }
 
 class EEntityState {
@@ -237,3 +207,26 @@ class EEntityState {
   @override
   int get hashCode => value.hashCode;
 }
+
+
+
+// abstract class IEntityParams<EntityColumnInfo> {
+//   // @override
+//   // operator ==(Object other) => throw(Exception(
+//   //   "IEntityParams must @override operator ==\n"
+//   //   "return other is T && this.primaryKey != null && other.primaryKey != null && this.primaryKey == other.primaryKey",
+//   // ));
+
+//   // @override
+//   // operator ==(Object other)
+//   //   => other is IEntityParams<EntityColumnInfo>
+//   //     && this.primaryKey != 0 && other.primaryKey != 0
+//   //     && this.primaryKey == other.primaryKey;
+
+//   // @override
+//   // int get hashCode => super.hashCode;
+
+//   int get pid;
+  
+//   set pid(int id);
+// }

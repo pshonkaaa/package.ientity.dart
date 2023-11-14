@@ -7,7 +7,7 @@ class RowInfo {
   );
 
   Map<String, dynamic> toMap() {
-    return args.map((key, value) => new MapEntry(key.name, value));
+    return args.map((key, value) => MapEntry(key.name, value));
   }
 
   List<Object?> toList(Iterable<EntityColumnInfo> columns) {

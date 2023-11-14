@@ -1,0 +1,3 @@
+class TableColumnAnnotation {
+  const TableColumnAnnotation();
+}
