@@ -3,9 +3,7 @@ import 'dart:convert' as dart;
 import 'package:meta/meta.dart';
 
 import '../change_column.dart';
-import '../../enums.dart';
 import '../entity_column_info.dart';
-import '../row_info.dart';
 import '../interfaces/entity.dart';
 
 abstract class BaseEntity implements IEntity {

@@ -1,9 +1,9 @@
-import 'package:meta/meta.dart';
+import 'package:true_core/library.dart';
 
 import '../entity_column_info.dart';
 import 'to_sql_convertable.dart';
 
-abstract class ITable implements IToSqlConvertable {
+abstract class ITable extends BaseAsyncStateable implements IToSqlConvertable {
   final String name;
   final List<EntityColumnInfo> _columns;
   late final EntityColumnInfo _primaryKey;
@@ -17,14 +17,6 @@ abstract class ITable implements IToSqlConvertable {
     required List<EntityColumnInfo> columns,
   }) : _columns = columns {
     _primaryKey = columns.firstWhere((e) => e.isPrimaryKey);
-  }
-  
-  @mustCallSuper
-  Future<void> initState() async {
-  }
-
-  @mustCallSuper
-  Future<void> dispose() async {
   }
 
   @override
