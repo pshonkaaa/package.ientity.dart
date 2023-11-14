@@ -1,8 +1,7 @@
-import 'ColumnInfo.dart';
-import 'ColumnType.dart';
+import 'column_info.dart';
+import 'column_type.dart';
 
 class EntityColumnInfo<T> extends ColumnInfo {
-  final T Function(T value)? transformer;
   const EntityColumnInfo(
     String name,
     ColumnType type, {
@@ -16,6 +15,8 @@ class EntityColumnInfo<T> extends ColumnInfo {
     name: name,
     type: type,
   );
+  
+  final T Function(T value)? transformer;
 
   @override
   String toString() => name;

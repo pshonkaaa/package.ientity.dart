@@ -1,6 +1,6 @@
 name: ientity
 description: no description
-version: 0.1.3
+version: 0.1.4
 homepage:
 publish_to: none
 
@@ -9,6 +9,10 @@ environment:
   
 dependencies:
   meta: any
+    
+  true_core:
+    git:
+      url: https://github.com/TrueCollaboration/true_core.dart.git
     
   json_annotation_ex:
     git:

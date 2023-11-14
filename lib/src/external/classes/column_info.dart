@@ -1,14 +1,7 @@
-import 'ColumnType.dart';
-import 'IToSqlConvertable.dart';
+import 'column_type.dart';
+import 'interfaces/to_sql_convertable.dart';
 
 class ColumnInfo implements IToSqlConvertable {
-  final String name;
-  final ColumnType type;
-  final String? defaultValue;
-  final bool isPrimaryKey;
-  final bool isAutoIncrement;
-  final bool isNullable;
-  final Map<String, dynamic>? extra;
   const ColumnInfo({
     required this.name,
     required this.type,
@@ -18,6 +11,20 @@ class ColumnInfo implements IToSqlConvertable {
     required this.isNullable,
     this.extra,
   });
+
+  final String name;
+
+  final ColumnType type;
+
+  final String? defaultValue;
+
+  final bool isPrimaryKey;
+
+  final bool isAutoIncrement;
+
+  final bool isNullable;
+  
+  final Map<String, dynamic>? extra;
   
   @override
   String toSql() {

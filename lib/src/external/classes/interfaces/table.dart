@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
 
-import 'EntityColumnInfo.dart';
-import 'IToSqlConvertable.dart';
+import '../entity_column_info.dart';
+import 'to_sql_convertable.dart';
 
 abstract class ITable implements IToSqlConvertable {
   final String name;

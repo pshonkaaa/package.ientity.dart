@@ -1,11 +1,7 @@
-import 'dart:convert' as dart;
-
-import 'package:meta/meta.dart';
-
-import '../ChangedColumn.dart';
-import '../EntityColumnInfo.dart';
-import '../ERequestType.dart';
-import '../RowInfo.dart';
+import '../change_column.dart';
+import '../entity_column_info.dart';
+import '../../enums.dart';
+import '../row_info.dart';
 
 abstract class IEntity {
   int get id;
