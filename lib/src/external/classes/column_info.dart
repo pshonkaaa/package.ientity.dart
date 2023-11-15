@@ -40,4 +40,8 @@ class ColumnInfo implements IToSqlConvertable {
       sb.write(" AUTO_INCREMENT");
     return sb.toString();
   }
+
+  @override
+  String toString()
+    => name;
 }
