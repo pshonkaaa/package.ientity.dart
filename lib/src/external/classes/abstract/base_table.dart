@@ -1,4 +1,4 @@
-import 'package:true_core/library.dart';
+import 'package:foundation/library.dart';
 
 import '../entity_column_info.dart';
 import '../interfaces/table.dart';

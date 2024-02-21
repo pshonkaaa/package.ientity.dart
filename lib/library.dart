@@ -1,4 +1,4 @@
-library truecollaboration.true_core.ientity;
+library truecollaboration.foundation.ientity;
 
 export 'src/external/annotations/table.dart';
 export 'src/external/annotations/table_column.dart';
