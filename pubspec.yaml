@@ -10,9 +10,9 @@ environment:
 dependencies:
   meta: any
     
-  foundation:
+  pshondation:
     git:
-      url: https://github.com/pshonkaaa/package.foundation.dart.git
+      url: https://github.com/pshonkaaa/package.pshondation.dart.git
     
   json_annotation_ex:
     git:

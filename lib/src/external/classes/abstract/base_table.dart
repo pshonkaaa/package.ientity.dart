@@ -1,4 +1,4 @@
-import 'package:foundation/library.dart';
+import 'package:pshondation/library.dart';
 
 import '../entity_column_info.dart';
 import '../interfaces/table.dart';
